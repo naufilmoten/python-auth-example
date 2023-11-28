@@ -1,0 +1,28 @@
+name: Docker Build and Push for Python App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Load Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Build Image
+      run: docker build -t naufilmoten/python-auth-example .
+
+    - name: Docker Hub Login
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Push Image to Docker Hub
+      run: docker push naufilmoten/python-auth-example
